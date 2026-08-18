@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/itens")
@@ -61,4 +62,40 @@ public class ItemController {
         itemService.remover(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/titulo")
+    public ItemResponseDTO buscarPorTitulo(@RequestParam String titulo) {
+        return ItemResponseDTO.fromEntity(
+            itemService.buscarPorTitulo(titulo)
+     );
+    }
+    @GetMapping("/descricao")
+    public ItemResponseDTO buscarPorDescricao(@RequestParam String descricao) {
+        return ItemResponseDTO.fromEntity(
+            itemService.buscarPorDescricao(descricao)
+        );
+    }
+    @GetMapping("/buscar/titulo")
+    public List<ItemResponseDTO> buscarPorTituloContaining(
+        @RequestParam String titulo) {
+
+    return itemService.buscarPorTituloContaining(titulo).stream()
+            .map(ItemResponseDTO::fromEntity)
+            .toList();
+    }
+    @GetMapping("/buscar/descricao")
+    public List<ItemResponseDTO> buscarPorDescricaoContaining(
+        @RequestParam String descricao) {
+
+    return itemService.buscarPorDescricaoContaining(descricao).stream()
+            .map(ItemResponseDTO::fromEntity)
+            .toList();
+    }
+    @GetMapping("/usuario/{usuarioId}")
+    public List<ItemResponseDTO> listarPorUsuario(
+        @PathVariable Long usuarioId) {
+
+    return itemService.listarPorUsuario(usuarioId).stream()
+            .map(ItemResponseDTO::fromEntity)
+            .toList();
+    }   
 }

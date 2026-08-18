@@ -39,4 +39,19 @@ public class UsuarioService {
         Usuario usuario = buscarPorId(id);
         usuarioRepository.delete(usuario);
     }
+
+    public Usuario buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    }
+
+    public List<Usuario> buscarPorNome(String nome) {
+        return usuarioRepository.findByNomeContaining(nome);
+    }
+    public List<Usuario> listarCincoMaisRecentes() {
+         return usuarioRepository.findTop5ByOrderByDataCriacaoDesc();
+    }
+   public boolean existePorEmail(String email) {
+        return usuarioRepository.existsByEmail(email);
+    }
 }

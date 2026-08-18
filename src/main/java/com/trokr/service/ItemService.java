@@ -43,4 +43,23 @@ public class ItemService {
         Item item = buscarPorId(id);
         itemRepository.delete(item);
     }
+    public Item buscarPorTitulo(String titulo) {
+    return itemRepository.findByTitulo(titulo)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException("Item não encontrado com título " + titulo));
+    }   
+    public Item buscarPorDescricao(String descricao) {
+        return itemRepository.findByDescricao(descricao)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException("Item não encontrado com descrição " + descricao));
+    }
+    public List<Item> buscarPorTituloContaining(String titulo) {
+        return itemRepository.findByTituloContaining(titulo);
+    }
+    public List<Item> buscarPorDescricaoContaining(String descricao) {
+        return itemRepository.findByDescricaoContaining(descricao);
+    }
+    public List<Item> listarPorUsuario(Long usuarioId) {
+        return itemRepository.findByUsuarioProprietarioId(usuarioId);
+    }
 }

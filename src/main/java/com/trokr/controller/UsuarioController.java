@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
@@ -61,4 +61,29 @@ public class UsuarioController {
         usuarioService.remover(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/email")
+    public UsuarioResponseDTO buscarPorEmail(@RequestParam String email){
+        return UsuarioResponseDTO.fromEntity(
+            usuarioService.buscarPorEmail(email)
+            );
+    }
+
+    @GetMapping("/buscar")
+    public List<UsuarioResponseDTO> buscarPorNome(@RequestParam String nome){
+        return usuarioService.buscarPorNome(nome).stream()
+                .map(UsuarioResponseDTO::fromEntity)
+                .toList();
+    }
+
+    @GetMapping("/recentes")
+    public List<UsuarioResponseDTO> listarCincoMaisRecentes() {
+    return usuarioService.listarCincoMaisRecentes().stream()
+            .map(UsuarioResponseDTO::fromEntity)
+            .toList();
+    }
+    @GetMapping("/existe")
+    public boolean existePorEmail(@RequestParam String email) {
+         return usuarioService.existePorEmail(email);
+}   
 }
