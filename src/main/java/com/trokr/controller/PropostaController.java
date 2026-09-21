@@ -19,7 +19,7 @@ public class PropostaController {
     @Autowired
     private PropostaService propostaService;
 
-    // --- CRIAÇÃO E BUSCA (Mantido o excelente trabalho dela) ---
+    // --- CRIAÇÃO E BUSCA ---
 
     @PostMapping
     public ResponseEntity<PropostaResponseDTO> criar(@Valid @RequestBody PropostaRequestDTO dto) {
@@ -50,7 +50,7 @@ public class PropostaController {
         return ResponseEntity.ok(propostas);
     }
 
-    // --- TRANSIÇÕES DE ESTADO (Corrigido para @PatchMapping) ---
+    // --- TRANSIÇÕES DE ESTADO  ---
 
     @PatchMapping("/{id}/solicitar-homologacao")
     public ResponseEntity<Void> solicitarHomologacao(@PathVariable Long id) {
