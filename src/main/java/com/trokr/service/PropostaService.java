@@ -4,7 +4,7 @@ import com.trokr.dto.PropostaRequestDTO;
 import com.trokr.event.TrocaConcluidaEvent;
 import com.trokr.model.Item;
 import com.trokr.model.Proposta;
-import com.trokr.model.Status;
+import com.trokr.model.state.Status;
 import com.trokr.model.Usuario;
 import com.trokr.repository.ItemRepository;
 import com.trokr.repository.PropostaRepository;

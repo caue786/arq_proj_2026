@@ -4,8 +4,8 @@ import com.trokr.event.TrocaConcluidaEvent;
 import com.trokr.model.Avaliacao;
 import com.trokr.model.StatusAvaliacao;
 import com.trokr.repository.AvaliacaoRepository;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class AtualizarAvaliacaoListener {
@@ -16,7 +16,7 @@ public class AtualizarAvaliacaoListener {
         this.avaliacaoRepository = avaliacaoRepository;
     }
 
-    @TransactionalEventListener
+    @EventListener
     public void aoConcluirTroca(TrocaConcluidaEvent evento) {
         // Direção 1: UsuarioA avalia UsuarioB
         Avaliacao avaliacao1 = new Avaliacao();
