@@ -2,8 +2,7 @@ package com.trokr.model;
 
 import com.trokr.model.state.*;
 import com.trokr.model.state.proposta.*;
-// Deixe os imports de contraproposta comentados se ainda não preencheu as classes:
-// import com.trokr.model.state.contraproposta.*; 
+
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

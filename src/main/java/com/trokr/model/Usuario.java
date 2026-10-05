@@ -42,4 +42,7 @@ public class Usuario {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
+
+    @Column(nullable = false)
+    private Integer saldoCreditos = 0;
 }

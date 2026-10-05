@@ -15,7 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 /**
  * Um item ou habilidade oferecido por um usuário para troca.
  *
@@ -42,7 +43,9 @@ public class Item {
 
     @Column(nullable = false)
     private String descricao;
-    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CategoriaItem categoria;
 
 
     // Relação unidirecional de propósito: Item conhece seu dono, mas Usuario

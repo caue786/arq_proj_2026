@@ -129,7 +129,7 @@ public class PropostaService {
         propostaRepository.save(p);
     }
 
-    // --- ATUALIZADO PARA DISPARAR O EVENTO DA AULA 7 ---
+    // --- ATUALIZADO PARA DISPARAR O EVENTO  ---
     public void finalizarAcordo(Long id) {
         Proposta p = buscarPorId(id);
         p.finalizarAcordo();
