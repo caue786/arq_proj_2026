@@ -97,11 +97,20 @@ public class Proposta {
     public void cancelar() { this.estadoAtual.cancelar(this); }
 
     // --- Lógica Extra do Domínio Rico (Efeito Cascata) ---
-    public void recusarDemaisContrapropostas(Proposta contraAceita) {
-        for (Proposta cp : this.contrapropostas) {
-            if (!cp.getId().equals(contraAceita.getId()) && cp.getStatus() != Status.RECUSADO && cp.getStatus() != Status.CANCELADO) {
-                cp.recusarContraproposta();
+   public void recusarDemaisContrapropostas(Proposta contraAceita) {
+    for (Proposta cp : this.contrapropostas) {
+        // Ignora a contraproposta que acabou de ser aceite e as que já estão fechadas
+        if (!cp.getId().equals(contraAceita.getId()) && cp.getStatus() != Status.RECUSADO && cp.getStatus() != Status.CANCELADO) {
+            
+            // SE for um rascunho abandonado, o efeito cascata apenas CANCELA
+            if (cp.getStatus() == Status.RASCUNHO) {
+                cp.cancelar(); 
+            } 
+            // SE for uma contraproposta válida e já enviada (EM_ANALISE), RECUSA
+            else {
+                cp.recusarContraproposta(); 
             }
         }
+    }
     }
 }

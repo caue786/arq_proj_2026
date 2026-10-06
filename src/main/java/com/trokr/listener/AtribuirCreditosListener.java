@@ -17,15 +17,15 @@ public class AtribuirCreditosListener {
 
     @EventListener
     public void aoConcluirTroca(TrocaConcluidaEvent evento) {
-        // Usuário A ganha créditos pelo Item A (que ele ofereceu)
-        Usuario usuarioA = evento.getProposta().getUsuario();
-        int creditosA = calculadora.calcular(evento.getProposta().getItem());
+        // Usuário A ganha créditos pelo Item A
+        Usuario usuarioA = evento.getUsuarioA();
+        int creditosA = calculadora.calcular(evento.getItemA());
         usuarioA.setSaldoCreditos(usuarioA.getSaldoCreditos() + creditosA);
         usuarioRepository.save(usuarioA);
 
-        // Usuário B ganha créditos pelo Item B (da contraproposta)
-        Usuario usuarioB = evento.ContrapropostaAceita().getUsuario();
-        int creditosB = calculadora.calcular(evento.ContrapropostaAceita().getItem());
+        // Usuário B ganha créditos pelo Item B
+        Usuario usuarioB = evento.getUsuarioB();
+        int creditosB = calculadora.calcular(evento.getItemB());
         usuarioB.setSaldoCreditos(usuarioB.getSaldoCreditos() + creditosB);
         usuarioRepository.save(usuarioB);
     }

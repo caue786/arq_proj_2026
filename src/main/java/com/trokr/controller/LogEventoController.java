@@ -19,7 +19,10 @@ public class LogEventoController {
     }
 
     @GetMapping
-    public List<LogEvento> listarPorTipo(@RequestParam String tipo) {
-        return logEventoRepository.findByTipo(tipo);
+    public List<LogEvento> listarLogs(@RequestParam(required = false) String tipo) {
+        if (tipo == null || tipo.isBlank()) {
+            return logEventoRepository.findAll(); // Retorna todos os logs se nenhum tipo for informado
+        }
+        return logEventoRepository.findByTipo(tipo); // Filtra pelo tipo se fornecido
     }
 }

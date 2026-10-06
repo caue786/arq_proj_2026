@@ -38,12 +38,12 @@ public class ItemController {
         return ItemResponseDTO.fromEntity(itemService.buscarPorId(id));
     }
 
-    @PostMapping
+   @PostMapping
     public ResponseEntity<ItemResponseDTO> criar(@Valid @RequestBody ItemRequestDTO dto) {
         Item item = new Item();
         item.setTitulo(dto.titulo());
         item.setDescricao(dto.descricao());
-
+        item.setCategoria(dto.categoria()); // 
         Item salvo = itemService.criar(item, dto.usuarioId());
         return ResponseEntity.status(HttpStatus.CREATED).body(ItemResponseDTO.fromEntity(salvo));
     }
@@ -53,6 +53,7 @@ public class ItemController {
         Item dadosAtualizados = new Item();
         dadosAtualizados.setTitulo(dto.titulo());
         dadosAtualizados.setDescricao(dto.descricao());
+        dadosAtualizados.setCategoria(dto.categoria()); // <-- ADICIONAR ESTA LINHA
 
         return ItemResponseDTO.fromEntity(itemService.atualizar(id, dadosAtualizados, dto.usuarioId()));
     }
