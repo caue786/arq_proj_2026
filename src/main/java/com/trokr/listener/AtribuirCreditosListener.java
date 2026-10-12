@@ -20,13 +20,15 @@ public class AtribuirCreditosListener {
         // Usuário A ganha créditos pelo Item A
         Usuario usuarioA = evento.getUsuarioA();
         int creditosA = calculadora.calcular(evento.getItemA());
-        usuarioA.setSaldoCreditos(usuarioA.getSaldoCreditos() + creditosA);
-        usuarioRepository.save(usuarioA);
+        
+        // CORRIDA 2: UPDATE Atômico (Sai o read-modify-write, entra a delegação para o banco)
+        usuarioRepository.adicionarCreditos(usuarioA.getId(), creditosA);
 
         // Usuário B ganha créditos pelo Item B
         Usuario usuarioB = evento.getUsuarioB();
         int creditosB = calculadora.calcular(evento.getItemB());
-        usuarioB.setSaldoCreditos(usuarioB.getSaldoCreditos() + creditosB);
-        usuarioRepository.save(usuarioB);
+        
+        // CORRIDA 2: UPDATE Atômico
+        usuarioRepository.adicionarCreditos(usuarioB.getId(), creditosB);
     }
 }

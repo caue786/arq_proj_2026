@@ -3,6 +3,7 @@ package com.trokr.exception;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,5 +21,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleNotFound(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("erro", ex.getMessage()));
+    }
+    // --- NOVO HANDLER PARA A CORRIDA 1 (Lock Otimista) ---
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<Map<String, String>> handleConflito(ObjectOptimisticLockingFailureException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of(
+                        "erro", "Conflito de Concorrência",
+                        "mensagem", "Esta proposta foi alterada por outro utilizador ao mesmo tempo. Por favor, recarregue e tente novamente."
+                ));
     }
 }

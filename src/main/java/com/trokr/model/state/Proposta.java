@@ -1,5 +1,6 @@
 package com.trokr.model;
 
+import com.trokr.model.Usuario;
 import com.trokr.model.state.*;
 import com.trokr.model.state.proposta.*;
 
@@ -12,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-
 @Entity
 @Table(name = "propostas")
 @Getter
@@ -49,6 +49,10 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
+    @Version
+    @Column(columnDefinition = "bigint default 0", nullable = false)
+    private Long versao;
 
     @Transient
     private EstadoProposta estadoAtual;
