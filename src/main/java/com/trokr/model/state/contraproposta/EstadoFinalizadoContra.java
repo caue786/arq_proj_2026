@@ -1,37 +1,29 @@
 package com.trokr.model.state.contraproposta;
 
+import com.trokr.exception.TransicaoInvalidaException;
 import com.trokr.model.Proposta;
 import com.trokr.model.state.proposta.EstadoProposta;
 
 public class EstadoFinalizadoContra implements EstadoProposta {
 
     @Override
-    public void solicitarHomologacao(Proposta proposta) { throw new IllegalStateException("Esta contraproposta já foi finalizada e não aceita alterações."); }
-    
+    public void solicitarHomologacao(Proposta proposta) { throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Esta contraproposta já foi finalizada e não aceita alterações."); }
     @Override
-    public void aprovarHomologacao(Proposta proposta) { throw new IllegalStateException("Esta contraproposta já foi finalizada e não aceita alterações."); }
-    
+    public void aprovarHomologacao(Proposta proposta) { throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Esta contraproposta já foi finalizada e não aceita alterações."); }
     @Override
-    public void recusarHomologacao(Proposta proposta) { throw new IllegalStateException("Esta contraproposta já foi finalizada e não aceita alterações."); }
-    
+    public void recusarHomologacao(Proposta proposta) { throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Esta contraproposta já foi finalizada e não aceita alterações."); }
     @Override
-    public void voltar(Proposta proposta) { throw new IllegalStateException("Esta contraproposta já foi finalizada e não aceita alterações."); }
-    
+    public void voltar(Proposta proposta) { throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Esta contraproposta já foi finalizada e não aceita alterações."); }
     @Override
-    public void iniciarNegociacao(Proposta proposta) { throw new IllegalStateException("Esta contraproposta já foi finalizada e não aceita alterações."); }
-    
+    public void iniciarNegociacao(Proposta proposta) { throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Esta contraproposta já foi finalizada e não aceita alterações."); }
     @Override
-    public void enviarContraproposta(Proposta proposta) { throw new IllegalStateException("Esta contraproposta já foi finalizada e não aceita alterações."); }
-    
+    public void enviarContraproposta(Proposta proposta) { throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Esta contraproposta já foi finalizada e não aceita alterações."); }
     @Override
-    public void aceitarParaNegociacao(Proposta proposta) { throw new IllegalStateException("Esta contraproposta já foi finalizada e não aceita alterações."); }
-    
+    public void aceitarParaNegociacao(Proposta proposta) { throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Esta contraproposta já foi finalizada e não aceita alterações."); }
     @Override
-    public void recusarContraproposta(Proposta proposta) { throw new IllegalStateException("Esta contraproposta já foi finalizada e não aceita alterações."); }
-    
+    public void recusarContraproposta(Proposta proposta) { throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Esta contraproposta já foi finalizada e não aceita alterações."); }
     @Override
-    public void finalizarAcordo(Proposta proposta) { throw new IllegalStateException("A contraproposta já está FINALIZADA."); }
-    
+    public void finalizarAcordo(Proposta proposta) { throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "A contraproposta já está FINALIZADA."); }
     @Override
-    public void cancelar(Proposta proposta) { throw new IllegalStateException("Esta contraproposta já foi finalizada e não pode ser cancelada."); }
+    public void cancelar(Proposta proposta) { throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Esta contraproposta já foi finalizada e não pode ser cancelada."); }
 }

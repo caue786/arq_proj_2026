@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/itens")
@@ -38,24 +38,18 @@ public class ItemController {
         return ItemResponseDTO.fromEntity(itemService.buscarPorId(id));
     }
 
-   @PostMapping
+    @PostMapping
     public ResponseEntity<ItemResponseDTO> criar(@Valid @RequestBody ItemRequestDTO dto) {
-        Item item = new Item();
-        item.setTitulo(dto.titulo());
-        item.setDescricao(dto.descricao());
-        item.setCategoria(dto.categoria()); // 
-        Item salvo = itemService.criar(item, dto.usuarioId());
+        // Delega diretamente o DTO para o serviço (a fábrica cuida de criar a subclasse correta)
+        Item salvo = itemService.criar(dto, dto.usuarioId());
         return ResponseEntity.status(HttpStatus.CREATED).body(ItemResponseDTO.fromEntity(salvo));
     }
 
     @PutMapping("/{id}")
     public ItemResponseDTO atualizar(@PathVariable Long id, @Valid @RequestBody ItemRequestDTO dto) {
-        Item dadosAtualizados = new Item();
-        dadosAtualizados.setTitulo(dto.titulo());
-        dadosAtualizados.setDescricao(dto.descricao());
-        dadosAtualizados.setCategoria(dto.categoria()); // <-- ADICIONAR ESTA LINHA
-
-        return ItemResponseDTO.fromEntity(itemService.atualizar(id, dadosAtualizados, dto.usuarioId()));
+        // Na atualização, o serviço valida se a categoria se mantém imutável
+        Item atualizado = itemService.atualizar(id, dto);
+        return ItemResponseDTO.fromEntity(atualizado);
     }
 
     @DeleteMapping("/{id}")
@@ -63,40 +57,39 @@ public class ItemController {
         itemService.remover(id);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/titulo")
     public ItemResponseDTO buscarPorTitulo(@RequestParam String titulo) {
         return ItemResponseDTO.fromEntity(
             itemService.buscarPorTitulo(titulo)
-     );
+        );
     }
+
     @GetMapping("/descricao")
     public ItemResponseDTO buscarPorDescricao(@RequestParam String descricao) {
         return ItemResponseDTO.fromEntity(
             itemService.buscarPorDescricao(descricao)
         );
     }
+
     @GetMapping("/buscar/titulo")
-    public List<ItemResponseDTO> buscarPorTituloContaining(
-        @RequestParam String titulo) {
-
-    return itemService.buscarPorTituloContaining(titulo).stream()
-            .map(ItemResponseDTO::fromEntity)
-            .toList();
+    public List<ItemResponseDTO> buscarPorTituloContaining(@RequestParam String titulo) {
+        return itemService.buscarPorTituloContaining(titulo).stream()
+                .map(ItemResponseDTO::fromEntity)
+                .toList();
     }
+
     @GetMapping("/buscar/descricao")
-    public List<ItemResponseDTO> buscarPorDescricaoContaining(
-        @RequestParam String descricao) {
-
-    return itemService.buscarPorDescricaoContaining(descricao).stream()
-            .map(ItemResponseDTO::fromEntity)
-            .toList();
+    public List<ItemResponseDTO> buscarPorDescricaoContaining(@RequestParam String descricao) {
+        return itemService.buscarPorDescricaoContaining(descricao).stream()
+                .map(ItemResponseDTO::fromEntity)
+                .toList();
     }
-    @GetMapping("/usuario/{usuarioId}")
-    public List<ItemResponseDTO> listarPorUsuario(
-        @PathVariable Long usuarioId) {
 
-    return itemService.listarPorUsuario(usuarioId).stream()
-            .map(ItemResponseDTO::fromEntity)
-            .toList();
+    @GetMapping("/usuario/{usuarioId}")
+    public List<ItemResponseDTO> listarPorUsuario(@PathVariable Long usuarioId) {
+        return itemService.listarPorUsuario(usuarioId).stream()
+                .map(ItemResponseDTO::fromEntity)
+                .toList();
     }   
 }

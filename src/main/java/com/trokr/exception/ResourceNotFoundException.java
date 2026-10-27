@@ -6,9 +6,9 @@ package com.trokr.exception;
  * robusto e padronizado (hierarquia de exceções, corpo de erro padronizado
  * etc.) é conteúdo de uma aula futura.
  */
-public class ResourceNotFoundException extends RuntimeException {
+public class ResourceNotFoundException extends TrokrException {
 
     public ResourceNotFoundException(String message) {
-        super(message);
+        super("RECURSO_NAO_ENCONTRADO", message);
     }
 }

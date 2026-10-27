@@ -72,7 +72,7 @@ public class PropostaService {
         contra.setUsuario(usuario);
         contra.setItem(item);
         contra.setPropostaAnterior(raiz);
-        contra.carregarEstado(); 
+        contra.carregarEstado();
 
         return propostaRepository.save(contra);
     }
@@ -111,7 +111,7 @@ public class PropostaService {
 
     public void aceitarParaNegociacao(Long id) {
         Proposta contra = buscarPorId(id);
-        contra.aceitarParaNegociacao(); 
+        contra.aceitarParaNegociacao();
         propostaRepository.save(contra);
         propostaRepository.save(contra.getPropostaAnterior());
     }
@@ -129,11 +129,11 @@ public class PropostaService {
         propostaRepository.save(p);
     }
 
-    // --- ATUALIZADO PARA DISPARAR O EVENTO  ---
+    // --- ATUALIZADO PARA DISPARAR O EVENTO ---
     public void finalizarAcordo(Long id) {
         Proposta p = buscarPorId(id);
         p.finalizarAcordo();
-        
+
         // Se a transição levou efetivamente ao estado FINALIZADO, publicamos o evento
         if (p.getStatus() == Status.FINALIZADO) {
             TrocaConcluidaEvent evento = construirEventoDeTrocaConcluida(p);
@@ -141,53 +141,43 @@ public class PropostaService {
                 eventPublisher.publishEvent(evento); // Dispara o Observer!
             }
         }
-        
+
         propostaRepository.save(p);
     }
 
-    // Método auxiliar que resolve os dois cenários (Raiz ou Contraproposta finalizando)
     private TrocaConcluidaEvent construirEventoDeTrocaConcluida(Proposta proposta) {
-        Usuario usuarioA;
-        Usuario usuarioB;
-        Item itemA;
-        Item itemB;
-        Long propostaRaizId;
+        if (proposta.getPropostaAnterior() != null) {
+            Proposta propostaOriginal = proposta.getPropostaAnterior();
+            Proposta contrapropostaAceita = proposta;
+            
+            return new TrocaConcluidaEvent(
+                propostaOriginal.getId(), 
+                propostaOriginal.getUsuario(), contrapropostaAceita.getUsuario(), 
+                propostaOriginal.getItem(), contrapropostaAceita.getItem(), 
+                LocalDateTime.now()
+            );
+        } 
+        else {
+            Proposta propostaOriginal = proposta;
+            Proposta contrapropostaAceita = proposta.getContrapropostas() != null ? 
+                proposta.getContrapropostas().stream()
+                    .filter(c -> c.getStatus() == Status.FINALIZADO) 
+                    .findFirst()
+                    .orElse(null) : null;
+            
+            Usuario usuarioDestino = contrapropostaAceita != null ? contrapropostaAceita.getUsuario() : propostaOriginal.getUsuario();
+            Item itemDestino = contrapropostaAceita != null ? contrapropostaAceita.getItem() : propostaOriginal.getItem();
 
-        if (proposta.isContraproposta()) {
-            // Cenário B: A Contraproposta está a finalizar
-            Proposta raiz = proposta.getPropostaAnterior();
-            propostaRaizId = raiz.getId();
-            
-            usuarioA = raiz.getUsuario();
-            itemA = raiz.getItem();
-            
-            usuarioB = proposta.getUsuario();
-            itemB = proposta.getItem();
-        } else {
-            // Cenário A: A Proposta Raiz está a finalizar
-            propostaRaizId = proposta.getId();
-            usuarioA = proposta.getUsuario();
-            itemA = proposta.getItem();
-            
-            // Localiza a contraproposta que estava associada e finalizada/negociada
-            Proposta contraAssociada = proposta.getContrapropostas().stream()
-                .filter(c -> c.getStatus() == Status.FINALIZADO || c.getStatus() == Status.NEGOCIADO)
-                .findFirst()
-                .orElse(null);
-            
-            if (contraAssociada == null) return null;
-            
-            usuarioB = contraAssociada.getUsuario();
-            itemB = contraAssociada.getItem();
+            return new TrocaConcluidaEvent(
+                propostaOriginal.getId(), 
+                propostaOriginal.getUsuario(), 
+                usuarioDestino, 
+                propostaOriginal.getItem(), 
+                itemDestino, 
+                LocalDateTime.now()
+            );
         }
-
-        return new TrocaConcluidaEvent(
-            propostaRaizId,
-            usuarioA,
-            usuarioB,
-            itemA,
-            itemB,
-            LocalDateTime.now()
-        );
     }
+
+    
 }

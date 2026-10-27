@@ -1,5 +1,6 @@
 package com.trokr.model.state.proposta;
 
+import com.trokr.exception.TransicaoInvalidaException;
 import com.trokr.model.Proposta;
 import com.trokr.model.state.Status;
 
@@ -23,17 +24,31 @@ public class EstadoAtiva implements EstadoProposta {
 
     // --- TRANSIÇÕES INVÁLIDAS ---
     @Override
-    public void solicitarHomologacao(Proposta proposta) { throw new IllegalStateException("Proposta já está ativa."); }
+    public void solicitarHomologacao(Proposta proposta) { 
+        throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Proposta já está ativa."); 
+    }
     @Override
-    public void aprovarHomologacao(Proposta proposta) { throw new IllegalStateException("Proposta já está ativa."); }
+    public void aprovarHomologacao(Proposta proposta) { 
+        throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Proposta já está ativa."); 
+    }
     @Override
-    public void recusarHomologacao(Proposta proposta) { throw new IllegalStateException("Proposta já está ativa."); }
+    public void recusarHomologacao(Proposta proposta) { 
+        throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Proposta já está ativa."); 
+    }
     @Override
-    public void finalizarAcordo(Proposta proposta) { throw new IllegalStateException("Inicie a negociação antes de finalizar o acordo."); }
+    public void finalizarAcordo(Proposta proposta) { 
+        throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Inicie a negociação antes de finalizar o acordo."); 
+    }
     @Override
-    public void enviarContraproposta(Proposta proposta) { throw new IllegalStateException("Ação inválida para proposta raiz."); }
+    public void enviarContraproposta(Proposta proposta) { 
+        throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Ação inválida para proposta raiz."); 
+    }
     @Override
-    public void aceitarParaNegociacao(Proposta proposta) { throw new IllegalStateException("Ação inválida para proposta raiz."); }
+    public void aceitarParaNegociacao(Proposta proposta) { 
+        throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Ação inválida para proposta raiz."); 
+    }
     @Override
-    public void recusarContraproposta(Proposta proposta) { throw new IllegalStateException("Ação inválida para proposta raiz."); }
+    public void recusarContraproposta(Proposta proposta) { 
+        throw new TransicaoInvalidaException("PROPOSTA_TRANSICAO_INVALIDA", "Ação inválida para proposta raiz."); 
+    }
 }

@@ -1,6 +1,5 @@
 package com.trokr.model;
 
-import com.trokr.model.Usuario;
 import com.trokr.model.state.*;
 import com.trokr.model.state.proposta.*;
 

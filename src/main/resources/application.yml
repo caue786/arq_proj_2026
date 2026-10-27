@@ -33,3 +33,8 @@ management:
         # Expor só o necessário nesta fase: health (usado como /health do
         # enunciado) e info. Nada de segurança/autenticação em cima disso ainda.
         include: health,info
+
+trokr:
+  notificacao:
+    taxa-falha: 0.3
+    latencia-ms: 150

@@ -14,7 +14,7 @@ public record UsuarioResponseDTO(
         String email,
         LocalDateTime dataCriacao
 ) {
-
+//devolver creditos 
     public static UsuarioResponseDTO fromEntity(Usuario usuario) {
         return new UsuarioResponseDTO(
                 usuario.getId(),
