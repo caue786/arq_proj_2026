@@ -35,6 +35,8 @@ management:
         include: health,info
 
 trokr:
+  demo:
+    endpoints: true
   notificacao:
-    taxa-falha: 0.3
+    taxa-falha: 0.0
     latencia-ms: 150

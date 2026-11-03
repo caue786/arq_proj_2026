@@ -1,61 +1,50 @@
 package com.trokr.listener;
 
 import com.trokr.event.TrocaConcluidaEvent;
-import com.trokr.exception.NotificacaoIndisponivelException;
-import com.trokr.service.NotificacaoService;
+import com.trokr.model.LogEvento;
+import com.trokr.model.Usuario;
+import com.trokr.notificacao.NotificacaoPort;
+import com.trokr.repository.LogEventoRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+
+import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class NotificarUsuariosListener {
 
     private static final Logger log = LoggerFactory.getLogger(NotificarUsuariosListener.class);
-    private static final int MAX_TENTATIVAS = 3;
-    private static final long ESPERA_INICIAL_MS = 200;
 
-    private final NotificacaoService notificacaoService;
+    private final NotificacaoPort notificacaoPort;
+    private final LogEventoRepository logEventoRepository;
 
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void aoConcluirTroca(TrocaConcluidaEvent evento) {
-        String mensagem = "Sua troca foi concluída com sucesso!";
+        String mensagem = "Sua troca da proposta " + evento.getPropostaId() + " foi concluida.";
 
-        // Notifica o Utilizador A com retry
-        enviarComRetry(evento.getUsuarioA().getId(), mensagem);
-
-        // Notifica o Utilizador B com retry
-        // (Garante que se o A falhar esgotando as tentativas, o B ainda é tentado)
-        enviarComRetry(evento.getUsuarioB().getId(), mensagem);
-    }
-
-    private void enviarComRetry(Long usuarioId, String mensagem) {
-        long espera = ESPERA_INICIAL_MS;
-        for (int tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
+        for (Usuario usuario : List.of(evento.getUsuarioA(), evento.getUsuarioB())) {
+            Long usuarioId = usuario.getId();
             try {
-                notificacaoService.enviar(usuarioId, mensagem);
-                return; // Sucesso: sai do método de envio
-            } catch (NotificacaoIndisponivelException ex) {
-                if (tentativa == MAX_TENTATIVAS) {
-                    // Esgotadas as tentativas: regista o erro técnico mas NÃO propaga,
-                    // pois a troca já foi concluída e comitada com sucesso na base de dados
-                    log.error("Falha definitiva ao enviar notificação para o utilizador {} após 3 tentativas.",
-                            usuarioId);
-                    return;
-                }
+                notificacaoPort.notificar(usuarioId, mensagem);
+            } catch (Exception ex) {
+                log.error("Notificação para o usuário {} falhou", usuarioId, ex);
 
-                log.warn("Tentativa {} falhou para o utilizador {}. Nova tentativa em {} ms", tentativa, usuarioId,
-                        espera);
+                LogEvento logEvento = new LogEvento(
+                        "FALHA_NOTIFICACAO",
+                        "ERROR",
+                        "NotificarUsuariosListener",
+                        Map.of(
+                                "mensagemErro", ex.getMessage() != null ? ex.getMessage() : "Sem mensagem de erro",
+                                "propostaId", evento.getPropostaId()),
+                        usuarioId);
 
-                try {
-                    Thread.sleep(espera);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-
-                espera *= 2; // Duplica o tempo de espera (backoff exponencial)
+                logEventoRepository.save(logEvento);
             }
         }
     }

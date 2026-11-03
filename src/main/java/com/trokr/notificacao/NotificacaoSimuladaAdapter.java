@@ -1,23 +1,26 @@
-package com.trokr.service;
+package com.trokr.notificacao;
 
 import com.trokr.exception.NotificacaoIndisponivelException;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-@Service
-public class NotificacaoService {
+@RequiredArgsConstructor
+public class NotificacaoSimuladaAdapter implements NotificacaoPort {
 
-    private static final Logger log = LoggerFactory.getLogger(NotificacaoService.class);
+    private static final Logger log = LoggerFactory.getLogger(NotificacaoSimuladaAdapter.class);
 
-    @Value("${trokr.notificacao.taxa-falha:0.0}")
-    private double taxaFalha;
+    private final SimulacaoNotificacao simulacao;
+    private final double taxaFalha;
+    private final long latenciaMs;
 
-    @Value("${trokr.notificacao.latencia-ms:0}")
-    private long latenciaMs;
+    @Override
+    public void notificar(Long usuarioId, String mensagem) {
+        // Se o interruptor estiver ligado (fora do ar), lança a exceção imediatamente
+        if (simulacao.foraDoAr()) {
+            throw new NotificacaoIndisponivelException("Serviço de notificação fora do ar");
+        }
 
-    public void enviar(Long usuarioId, String mensagem) {
         // Simula a latência de rede configurada
         try {
             Thread.sleep(latenciaMs);

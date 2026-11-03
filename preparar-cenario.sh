@@ -16,13 +16,13 @@ ID_C=$(echo "$RESP_C" | jq -r '.id')
 echo "    OK! (A=$ID_A | B=$ID_B | C=$ID_C)"
 
 echo "==> 2. Criando itens..."
-RESP_ITEM_A=$(curl -s -X POST "$BASE_URL/itens" -H "Content-Type: application/json" -d "{\"titulo\": \"Produto A\", \"descricao\": \"Prod\", \"usuarioId\": $ID_A, \"categoria\": \"PRODUTO\"}")
+RESP_ITEM_A=$(curl -s -X POST "$BASE_URL/itens" -H "Content-Type: application/json" -d "{\"titulo\": \"Produto A\", \"descricao\": \"Prod\", \"usuarioId\": $ID_A, \"categoria\": \"PRODUTO\", \"pesoGramas\": 500}")
 ITEM_A=$(echo "$RESP_ITEM_A" | jq -r '.id')
 
-RESP_ITEM_B=$(curl -s -X POST "$BASE_URL/itens" -H "Content-Type: application/json" -d "{\"titulo\": \"Servico B\", \"descricao\": \"Serv\", \"usuarioId\": $ID_B, \"categoria\": \"SERVICO\"}")
+RESP_ITEM_B=$(curl -s -X POST "$BASE_URL/itens" -H "Content-Type: application/json" -d "{\"titulo\": \"Servico B\", \"descricao\": \"Serv\", \"usuarioId\": $ID_B, \"categoria\": \"SERVICO\", \"duracaoMinutos\": 60}")
 ITEM_B=$(echo "$RESP_ITEM_B" | jq -r '.id')
 
-RESP_ITEM_C=$(curl -s -X POST "$BASE_URL/itens" -H "Content-Type: application/json" -d "{\"titulo\": \"Exp C\", \"descricao\": \"Exp\", \"usuarioId\": $ID_C, \"categoria\": \"EXPERIENCIA\"}")
+RESP_ITEM_C=$(curl -s -X POST "$BASE_URL/itens" -H "Content-Type: application/json" -d "{\"titulo\": \"Exp C\", \"descricao\": \"Exp\", \"usuarioId\": $ID_C, \"categoria\": \"EXPERIENCIA\", \"nivel\": \"INTERMEDIARIO\"}")
 ITEM_C=$(echo "$RESP_ITEM_C" | jq -r '.id')
 echo "    OK! (ItemA=$ITEM_A | ItemB=$ITEM_B | ItemC=$ITEM_C)"
 

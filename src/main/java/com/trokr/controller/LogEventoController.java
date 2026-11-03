@@ -1,6 +1,5 @@
 package com.trokr.controller;
 
-import com.trokr.adapter.RegistroDeEventos;
 import com.trokr.model.LogEvento;
 import com.trokr.repository.LogEventoRepository;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +10,9 @@ import java.util.List;
 public class LogEventoController {
 
     private final LogEventoRepository logEventoRepository;
-    private final RegistroDeEventos registroDeEventos;
 
-    public LogEventoController(LogEventoRepository logEventoRepository, RegistroDeEventos registroDeEventos) {
+    public LogEventoController(LogEventoRepository logEventoRepository) {
         this.logEventoRepository = logEventoRepository;
-        this.registroDeEventos = registroDeEventos;
     }
 
     @GetMapping
